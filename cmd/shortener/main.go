@@ -13,16 +13,17 @@ import (
 
 var (
 	urlMap = make(map[string]string)
+	rng    = rand.New(rand.NewSource(time.Now().UnixNano()))
 )
 
 func generateRandomString() string {
 	const charset = "abcdefghijklmnopqrstuvwxyz"
-	var result string
+	var result strings.Builder
 	for i := 0; i < 6; i++ {
-		randomIndex := rand.Intn(len(charset))
-		result += string(charset[randomIndex])
+		randomIndex := rng.Intn(len(charset))
+		result.WriteByte(charset[randomIndex])
 	}
-	return result
+	return result.String()
 }
 
 func handleRequests(res http.ResponseWriter, req *http.Request) {
@@ -49,7 +50,7 @@ func handleRequests(res http.ResponseWriter, req *http.Request) {
 		urlMap[id] = originalURL
 		log.Printf("%s %s\n", id, originalURL)
 
-		shortenedURL := fmt.Sprintf("http://localhost:8080/%s", id)
+		shortenedURL := fmt.Sprintf("http://localhost:8081/%s", id)
 		res.Header().Set("Content-Type", "text/plain")
 		res.WriteHeader(http.StatusCreated)
 		fmt.Fprintf(res, "%s", shortenedURL)
@@ -60,8 +61,8 @@ func handleRequests(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		idUrl := parts[1]
-		originalURL, exists := urlMap[idUrl]
+		idURL := parts[1]
+		originalURL, exists := urlMap[idURL]
 		if !exists {
 			http.Error(res, "url not found", http.StatusNotFound)
 			return
@@ -75,7 +76,6 @@ func handleRequests(res http.ResponseWriter, req *http.Request) {
 
 func main() {
 	fmt.Println("Starting server...")
-	rand.Seed(time.Now().UnixNano())
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handleRequests)
 
