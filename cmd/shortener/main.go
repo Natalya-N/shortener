@@ -50,7 +50,7 @@ func handleRequests(res http.ResponseWriter, req *http.Request) {
 		urlMap[id] = originalURL
 		log.Printf("%s %s\n", id, originalURL)
 
-		shortenedURL := fmt.Sprintf("http://localhost:8081/%s", id)
+		shortenedURL := fmt.Sprintf("http://localhost:8080/%s", id)
 		res.Header().Set("Content-Type", "text/plain")
 		res.WriteHeader(http.StatusCreated)
 		fmt.Fprintf(res, "%s", shortenedURL)
