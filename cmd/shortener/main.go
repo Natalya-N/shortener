@@ -79,7 +79,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handleRequests)
 
-	err := http.ListenAndServe(":8081", mux)
+	err := http.ListenAndServe(":8080", mux)
 	if err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
