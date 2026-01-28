@@ -74,13 +74,13 @@ func handleRequests(res http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	fmt.Println("Starting server...")
 	rand.Seed(time.Now().UnixNano())
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handleRequests)
 
-	err := http.ListenAndServe(":8080", mux)
+	err := http.ListenAndServe(":8081", mux)
 	if err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
-
