@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"math/rand"
 	"net/http"
 	"net/url"
@@ -12,14 +11,16 @@ import (
 )
 
 type Handler struct {
-	urlMap map[string]string
-	rng    *rand.Rand
+	urlMap  map[string]string
+	rng     *rand.Rand
+	baseURL string
 }
 
-func NewHandler() *Handler {
+func NewHandler(baseURL string) *Handler {
 	return &Handler{
-		urlMap: make(map[string]string),
-		rng:    rand.New(rand.NewSource(time.Now().UnixNano())),
+		urlMap:  make(map[string]string),
+		rng:     rand.New(rand.NewSource(time.Now().UnixNano())),
+		baseURL: baseURL,
 	}
 }
 
@@ -49,7 +50,7 @@ func (h *Handler) Shorten(c *gin.Context) {
 	id := h.generateRandomString()
 	h.urlMap[id] = originalURL
 
-	shortURL := fmt.Sprintf("http://localhost:8080/%s", id)
+	shortURL := strings.TrimRight(h.baseURL, "/") + "/" + id
 
 	c.Header("Content-Type", "text/plain")
 	c.String(http.StatusCreated, shortURL)
