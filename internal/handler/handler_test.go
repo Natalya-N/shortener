@@ -19,13 +19,13 @@ func setupRouter(h *Handler) *gin.Engine {
 }
 
 func TestGenerateRandomString_Length(t *testing.T) {
-	h := NewHandler()
+	h := NewHandler("http://localhost:8080")
 	id := h.generateRandomString()
 	assert.Len(t, id, 6)
 }
 
 func TestShorten_Success(t *testing.T) {
-	h := NewHandler()
+	h := NewHandler("http://localhost:8080")
 	router := setupRouter(h)
 
 	body := "https://practicum.yandex.ru/"
@@ -41,7 +41,7 @@ func TestShorten_Success(t *testing.T) {
 }
 
 func TestShorten_InvalidMethod(t *testing.T) {
-	h := NewHandler()
+	h := NewHandler("http://localhost:8080")
 	router := setupRouter(h)
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -53,7 +53,7 @@ func TestShorten_InvalidMethod(t *testing.T) {
 }
 
 func TestShorten_InvalidURL(t *testing.T) {
-	h := NewHandler()
+	h := NewHandler("http://localhost:8080")
 	router := setupRouter(h)
 
 	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader("invalid-url"))
@@ -65,7 +65,7 @@ func TestShorten_InvalidURL(t *testing.T) {
 }
 
 func TestRedirect_Success(t *testing.T) {
-	h := NewHandler()
+	h := NewHandler("http://localhost:8080")
 	h.urlMap["genstr"] = "https://practicum.yandex.ru/"
 
 	router := setupRouter(h)
@@ -80,7 +80,7 @@ func TestRedirect_Success(t *testing.T) {
 }
 
 func TestRedirect_UnknownID(t *testing.T) {
-	h := NewHandler()
+	h := NewHandler("http://localhost:8080")
 	router := setupRouter(h)
 
 	req := httptest.NewRequest(http.MethodGet, "/unknown", nil)
@@ -92,7 +92,7 @@ func TestRedirect_UnknownID(t *testing.T) {
 }
 
 func TestRedirect_InvalidMethod(t *testing.T) {
-	h := NewHandler()
+	h := NewHandler("http://localhost:8080")
 	router := setupRouter(h)
 
 	req := httptest.NewRequest(http.MethodPost, "/example", nil)
